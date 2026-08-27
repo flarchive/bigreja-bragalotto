@@ -1,0 +1,15 @@
+{
+  "extends": "flarum-tsconfig",
+  "include": [
+    "src/**/*",
+    "../vendor/flarum/core/js/dist-typings/@types/**/*"
+  ],
+  "compilerOptions": {
+    "declarationDir": "./dist-typings",
+    "baseUrl": ".",
+    "paths": {
+      "flarum/*": ["../vendor/flarum/core/js/dist-typings/*"],
+      "@acpl-mobile-tab": ["../vendor/acpl/mobile-tab/js/dist-typings/index.d.ts"]
+    }
+  }
+}
