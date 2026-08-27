@@ -1,0 +1,462 @@
+// ============================================
+// Pickem Admin Panel v4 - Fixed & Responsive
+// ============================================
+
+@card-radius: 8px;
+@transition-speed: 180ms;
+
+// Status colors
+@status-scheduled: #27ae60;
+@status-closed: #e74c3c;
+@status-finished: #999;
+@status-cancelled: #f39c12;
+
+// ============================================
+// MIXINS
+// ============================================
+
+.card-style() {
+  background: var(--body-bg);
+  border: 1px solid var(--control-bg);
+  border-radius: @card-radius;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all @transition-speed;
+}
+
+// ============================================
+// MAIN CONTAINER & TABS (ORİJİNAL YAPI KORUNDU)
+// ============================================
+
+.PickemPage {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+  
+  @media (max-width: 768px) {
+    padding: 16px 12px;
+  }
+
+  // TABS - Sizin orijinal yapınız
+  &-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 24px;
+    background: var(--control-bg);
+    padding: 4px;
+    border-radius: 8px;
+    overflow-x: auto;
+    flex-wrap: wrap;
+    -webkit-overflow-scrolling: touch;
+    
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
+
+    .Button {
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: var(--muted-color);
+      font-size: 14px;
+      font-weight: 600;
+      transition: all @transition-speed;
+      flex: 1;
+      white-space: nowrap;
+      min-width: fit-content;
+
+      i { font-size: 14px; }
+
+      &:hover {
+        color: var(--link-color);
+        background: rgba(0, 0, 0, 0.03);
+      }
+
+      &.Button--primary {
+        color: var(--primary-color);
+        background: var(--body-bg);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        font-weight: 700;
+      }
+
+      @media (max-width: 768px) {
+        padding: 10px 14px;
+        font-size: 13px;
+      }
+    }
+  }
+
+  &-content {
+    .card-style();
+    padding: 24px;
+    min-height: 400px;
+
+    @media (max-width: 768px) {
+      padding: 16px;
+    }
+  }
+}
+
+// ============================================
+// TAB SECTIONS HEADER
+// ============================================
+
+.TeamsTab, .SeasonsTab, .WeeksTab, .EventsTab, .SettingsTab {
+  &-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--control-bg);
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: stretch; // Buton tam genişlik
+      gap: 12px;
+    }
+
+    h3 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--heading-color);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      i {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: fade(@status-scheduled, 10%); // Primary color fade alternatifi
+        border-radius: 6px;
+        color: var(--primary-color);
+        font-size: 14px;
+      }
+    }
+
+    .Button--primary {
+      font-weight: 600;
+      padding: 9px 16px;
+      border-radius: 6px;
+      transition: all @transition-speed;
+      
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+      
+      @media (max-width: 768px) {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  }
+
+  &-filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+    padding: 16px;
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 6px;
+    
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+    
+    .FormGroup {
+      margin: 0;
+      label {
+        display: block;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--muted-color);
+        margin-bottom: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+      }
+      
+      select {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid var(--control-bg);
+        border-radius: 6px;
+        background: var(--body-bg);
+        color: var(--body-color);
+        font-size: 14px;
+        
+        &:focus {
+          outline: none;
+          border-color: var(--primary-color);
+          box-shadow: 0 0 0 3px fade(#4D698E, 10%); // Primary fade
+        }
+      }
+    }
+  }
+}
+
+// ============================================
+// CARD LIST (Tablolar)
+// ============================================
+
+.CardList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; // Gap azaltıldı
+
+  &-header {
+    display: grid;
+    grid-template-columns: var(--grid-cols);
+    gap: 8px; // Gap azaltıldı
+    padding: 12px 16px;
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--muted-color);
+    align-items: center;
+
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+
+  &-item {
+    .card-style();
+    padding: 10px 16px; // Dikey padding azaltıldı
+    display: grid;
+    grid-template-columns: var(--grid-cols);
+    gap: 8px; // Gap azaltıldı
+    align-items: center;
+    transition: all @transition-speed;
+
+    &:hover {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transform: translateY(-1px);
+      border-color: var(--primary-color);
+    }
+
+    // MOBİL KART GÖRÜNÜMÜ
+    @media (max-width: 768px) {
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+      gap: 12px;
+
+      &-cell {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        padding-bottom: 8px;
+        border-bottom: 1px solid var(--control-bg);
+
+        &:last-child { 
+          padding-bottom: 0; 
+          border-bottom: none; 
+        }
+
+        // Data Label (TSX'ten gelen)
+        &::before {
+          content: attr(data-label);
+          font-weight: 700;
+          font-size: 11px;
+          color: var(--muted-color);
+          text-transform: uppercase;
+          margin-right: 10px;
+        }
+
+        &:empty { display: none; }
+        
+        // Mobilde Action kısmı özel
+        &.CardList-item-actions {
+          margin-top: 4px;
+          border-top: 2px solid var(--control-bg);
+          padding-top: 12px;
+          
+          &::before { display: none; }
+        }
+      }
+    }
+  }
+
+  &-item-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--body-color);
+    min-width: 0; // Taşmayı önler
+    overflow: hidden;
+    text-overflow: ellipsis;
+    
+    &--primary {
+      font-weight: 600;
+      color: var(--heading-color);
+    }
+    
+    &--muted {
+      color: var(--muted-color);
+      font-size: 13px;
+    }
+  }
+
+  &-item-actions {
+    display: flex;
+    gap: 4px; // Buton arası boşluk azaltıldı
+    justify-content: flex-end;
+
+    // SIKINTILI KISIM ÇÖZÜMÜ: Buton boyutları
+    .Button {
+      font-size: 12px;
+      padding: 6px 8px; // Padding azaltıldı
+      border-radius: 4px;
+      font-weight: 600;
+      white-space: nowrap; // Metnin kırılmasını engelle
+      
+      i { font-size: 12px; margin-right: 4px; }
+
+      &--primary:hover { transform: translateY(-1px); }
+      
+      &--danger {
+        background: fade(@status-closed, 10%);
+        color: @status-closed;
+        &:hover { background: @status-closed; color: white; }
+      }
+      
+      &--success {
+        background: fade(@status-scheduled, 10%);
+        color: @status-scheduled;
+        &:hover { background: @status-scheduled; color: white; }
+      }
+    }
+
+    @media (max-width: 768px) {
+      width: 100%;
+      .Button { flex: 1; justify-content: center; }
+    }
+  }
+}
+
+// ============================================
+// GRID CONFIGURATIONS (Desktop)
+// ============================================
+
+// Teams: Logo | Name | Slug | Actions
+.TeamsTab .CardList { 
+  --grid-cols: 50px 2fr 1fr 160px;
+  @media (max-width: 1024px) { --grid-cols: 50px 1fr 1fr 140px; }
+}
+
+// Seasons: Name | Slug | Dates | Actions
+.SeasonsTab .CardList { 
+  --grid-cols: 1.5fr 1fr 1.5fr 160px; 
+  @media (max-width: 1024px) { --grid-cols: 1fr 1fr 1fr 140px; }
+}
+
+// Weeks: Name | Season | Week# | Actions
+.WeeksTab .CardList { 
+  --grid-cols: 1.5fr 1fr 80px 160px; 
+  @media (max-width: 1024px) { --grid-cols: 1fr 1fr 80px 140px; }
+}
+
+// Events: Home | Away | Date | Status | Score | Actions
+// BURADA AKSİYON ALANI GENİŞLETİLDİ (240px)
+.EventsTab .CardList { 
+  --grid-cols: 1.2fr 1.2fr 160px 100px 80px 240px;
+  
+  @media (max-width: 1200px) { 
+    --grid-cols: 1fr 1fr 140px 90px 70px 220px; 
+  }
+}
+
+// ============================================
+// COMPONENT STYLES
+// ============================================
+
+.TeamLogo {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-weight: 700;
+  color: white;
+  font-size: 13px;
+  
+  &--image { object-fit: cover; background: #5e5e5e; }
+}
+
+.TeamCell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  
+  span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.StatusBadge {
+  display: inline-flex;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+
+  &--scheduled { background: fade(@status-scheduled, 15%); color: @status-scheduled; }
+  &--closed { background: fade(@status-closed, 15%); color: @status-closed; }
+  &--finished { background: rgba(0,0,0,0.05); color: var(--text-color); border: 1px solid rgba(0,0,0,0.1); }
+  &--cancelled { background: fade(@status-cancelled, 15%); color: @status-cancelled; }
+}
+
+.LoadMore {
+  text-align: center;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--control-bg);
+  .Button { padding: 8px 24px; }
+}
+
+// Modal & Settings (Aynen korundu)
+.Modal .Modal-body .FormGroup {
+  margin-bottom: 16px;
+  label { font-weight: 600; font-size: 13px; margin-bottom: 6px; display: block; }
+  input, select { width: 100%; padding: 8px 12px; border: 1px solid var(--control-bg); border-radius: 6px; background: var(--body-bg); color: var(--body-color); }
+}
+.Modal .Modal-footer { display: flex; justify-content: flex-end; gap: 8px; }
+
+.SettingsTab .Form-group {
+  .card-style();
+  padding: 20px;
+  margin-bottom: 20px;
+  h3 { margin: 0 0 10px 0; display: flex; gap: 8px; align-items: center; }
+  p { margin-bottom: 15px; font-size: 13px; color: var(--muted-color); }
+}
+
+.EmptyState {
+  text-align: center;
+  padding: 40px;
+  color: var(--muted-color);
+  i { font-size: 32px; margin-bottom: 10px; opacity: 0.5; }
+  p { margin: 0; }
+}
