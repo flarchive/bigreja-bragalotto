@@ -1,0 +1,23 @@
+{
+  "name": "@bigreja/bragalotto",
+  "private": true,
+  "prettier": "@flarum/prettier-config",
+  "dependencies": {
+    "flarum-tsconfig": "^1.0.2",
+    "flarum-webpack-config": "^2.0.0",
+    "webpack": "^5.94.0"
+  },
+  "devDependencies": {
+    "@flarum/prettier-config": "^1.0.0",
+    "cross-env": "^7.0.3",
+    "prettier": "^3.0.3",
+    "webpack-cli": "^7.1.0"
+  },
+  "scripts": {
+    "dev": "webpack --mode development --watch",
+    "build": "webpack --mode production",
+    "analyze": "cross-env ANALYZER=true npm run build",
+    "format": "prettier --write src",
+    "format-check": "prettier --check src"
+  }
+}
