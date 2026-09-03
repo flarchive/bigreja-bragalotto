@@ -1,0 +1,117 @@
+{
+  "name": "bigreja/bragalotto",
+  "description": "Bragalotto Extension for Superbraga",
+  "keywords": [
+    "flarum",
+    "extension",
+    "pickem",
+    "bragalotto",
+    "predictions",
+    "sports"
+  ],
+  "type": "flarum-extension",
+  "license": "MIT",
+  "support": {
+    "issues": "https://github.com/bigreja/bragalotto/issues",
+    "source": "https://github.com/bigreja/bragalotto",
+    "forum": "https://discuss.flarum.org/d/your-discussion-id"
+  },
+  "homepage": "https://github.com/bigreja/bragalotto",
+  "funding": [
+    {
+      "type": "website",
+      "url": "https://github.com/bigreja"
+    }
+  ],
+  "require": {
+    "flarum/core": "^1.2.0"
+  },
+  "authors": [
+    {
+      "name": "Bruno Igreja",
+      "email": "pruno@igreja.com.pt",
+      "role": "Developer"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Bigreja\\Bragalotto\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Bigreja\\Bragalotto\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "flarum-extension": {
+      "title": "Bragalotto",
+      "category": "feature",
+      "icon": {
+        "name": "fas fa-trophy",
+        "backgroundColor": "#3498db",
+        "color": "#fff"
+      },
+      "optional-dependencies": [
+        "acpl/mobile-tab"
+      ]
+    },
+    "flarum-cli": {
+      "modules": {
+        "admin": true,
+        "forum": true,
+        "js": true,
+        "jsCommon": true,
+        "css": true,
+        "gitConf": true,
+        "githubActions": true,
+        "prettier": true,
+        "typescript": true, 
+        "bundlewatch": false,
+        "backendTesting": true,
+        "editorConfig": true,
+        "styleci": true
+      }
+    }
+  },
+  "scripts": {
+    "test": "phpunit -c phpunit.xml",
+    "test:coverage": "phpunit -c phpunit.xml --coverage-html coverage",
+    "analyse": "vendor/bin/phpstan analyse",
+    "analyse:clear": "vendor/bin/phpstan clear-result-cache",
+    "cs": "vendor/bin/php-cs-fixer fix --dry-run --diff",
+    "cs:fix": "vendor/bin/php-cs-fixer fix",
+    "qa": [
+      "@cs",
+      "@test"
+    ],
+    "qa:full": [
+      "@cs",
+      "@analyse",
+      "@test"
+    ]
+  },
+  "scripts-descriptions": {
+    "test": "Run unit tests",
+    "test:coverage": "Run tests with code coverage",
+    "analyse": "Run static analysis with PHPStan",
+    "analyse:clear": "Clear PHPStan cache",
+    "cs": "Check code style (dry run)",
+    "cs:fix": "Fix code style issues",
+    "qa": "Run essential quality checks (Code Style + Tests)",
+    "qa:full": "Run all quality checks (Code Style + PHPStan + Tests)"
+  },
+  "config": {
+    "sort-packages": true,
+    "allow-plugins": {
+      "composer/installers": true
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require-dev": {
+    "flarum/phpstan": "*",
+    "flarum/testing": "^1.0",
+    "friendsofphp/php-cs-fixer": "^3.64"
+  }
+}
