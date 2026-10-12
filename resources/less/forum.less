@@ -1,0 +1,1171 @@
+// Forum styles for Pick'em extension - NİHAİ SÜRÜM + YENİ TAB SİSTEMİ
+
+// ============================================
+// VARIABLES
+// ============================================
+
+@pickem-success-color: #27ae60;
+@pickem-danger-color: #e74c3c;
+@pickem-warning-color: #f39c12;
+@pickem-info-color: #3498db;
+@pickem-finished-color: @muted-color; 
+
+// ============================================
+// TÜM STILLER .PickemPage SCOPE'UNDA
+// ============================================
+
+.PickemPage {
+  // Gerekli media query değişkenlerini scope içine tanımla
+  @desktop-up: ~"screen and (min-width: 992px)";
+  @tablet-down: ~"screen and (max-width: 991.98px)";
+  @phone-down: ~"screen and (max-width: 767.98px)";
+	
+	@media (min-width: 768px) {
+    	.Hero.PickemHero .container {
+        	padding-bottom:40px
+    	}
+	}
+  
+  // ============================================
+  // TABS - Flarum Native Style + YENİ SİSTEM
+  // ============================================
+  
+  .PickemPage-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--control-bg-shaded);
+    
+    // ✅ YENİ: Mobile horizontal scroll
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+    
+    // ✅ YENİ: Scrollbar gizle (işlevsellik korunur)
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    .Button.PickemPage-tab {
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      padding: 10px 16px;
+      font-weight: 500;
+      font-size: 14px;
+      color: var(--muted-color);
+      transition: color 0.2s;
+      position: relative;
+      margin-bottom: -1px;
+      
+      // ✅ YENİ: Mobile optimization
+      white-space: nowrap;
+      flex-shrink: 0;
+
+      &:hover {
+        color: var(--link-color);
+      }
+
+      &.active {
+        color: var(--link-color);
+        font-weight: 600;
+
+        &::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          height: 2px;
+          background: var(--link-color);
+        }
+      }
+      
+      // ✅ YENİ: Mobile styling
+      @media @phone-down {
+        padding: 10px 12px;
+        font-size: 13px;
+      }
+      
+      // ✅ YENİ: Accessibility
+      &:focus-visible {
+        outline: 2px solid var(--link-color);
+        outline-offset: -2px;
+        z-index: 1;
+      }
+      
+      &:active {
+        transform: translateY(1px);
+      }
+    }
+    
+    // ✅ YENİ: Mobile scroll indicator
+    @media @phone-down {
+      &::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 30px;
+        background: linear-gradient(
+          to right, 
+          transparent, 
+          var(--body-bg) 90%
+        );
+        pointer-events: none;
+      }
+    }
+  }
+
+  // ============================================
+  // ✅ YENİ: TAB CONTENT CONTAINER
+  // ============================================
+  .PickemPage-tabContent {
+    position: relative;
+    margin-top: 20px;
+  }
+
+  /**
+   * ✅ YENİ: TAB PANE SYSTEM - CORE PATTERN
+   * Tüm tab'ler DOM'da kalır, CSS ile toggle edilir
+   * Component lifecycle KORUNUR, state kaybolmaz
+   */
+  .PickemPage-tabPane {
+    display: none; // Default: gizli
+    
+    &.active {
+      display: block; // Sadece active gösterilir
+    }
+    
+    // ✅ YENİ: Smooth transition
+    animation: fadeInTab 0.2s ease-in;
+  }
+  
+  // ✅ YENİ: Fade animation
+  @keyframes fadeInTab {
+    from {
+      opacity: 0;
+      transform: translateY(-5px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  // ESKİ .PickemPage-tab-content class'ı da uyumluluk için bırakılabilir
+  .PickemPage-tab-content {
+    margin-top: 20px;
+  }
+
+  // ============================================
+  // FİLTRELER (MatchesTab.tsx için)
+  // ============================================
+  .PickemPage-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 16px;
+    background: var(--control-bg); 
+    border-radius: var(--border-radius); 
+    margin-bottom: 16px;
+    align-items: flex-end;
+    
+    @media @phone-down {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    
+    .FilterGroup {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+      min-width: 180px;
+
+      @media @phone-down {
+        min-width: 100%;
+      }
+
+      label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text-color);
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+
+        i {
+          font-size: 11px;
+          color: @primary-color; 
+          width: 14px;
+        }
+      }
+
+      .FormControl {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid var(--control-bg-shaded); 
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 500;
+        background: var(--body-bg-light); 
+        color: var(--text-color);
+        transition: all 0.2s ease;
+        cursor: pointer;
+        
+        &:focus {
+          border-color: @primary-color; 
+          outline: none;
+          box-shadow: 0 0 0 3px fade(@primary-color, 10%); 
+        }
+
+        &:hover {
+          border-color: fade(@primary-color, 50%); 
+        }
+      }
+    }
+  }
+
+  // ============================================
+  // MATCHES LIST
+  // ============================================
+
+  .MatchesList {
+    display: flex;
+    flex-direction: column;
+    gap: 16px; 
+  }
+
+  // ============================================
+  // EVENT CARD
+  // ============================================
+
+  .EventCard {
+    background: var(--control-bg); 
+    border-radius: var(--border-radius); 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04); 
+    border: none; 
+    padding: 16px;
+    position: relative;
+    overflow: hidden; 
+
+    // STATUS BADGE
+    .EventCard-status {
+      position: absolute;
+      top: -1px; 
+      right: 12px;
+      padding: 3px 10px;
+      border-radius: 0 0 6px 6px; 
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 2px 4px var(--shadow-color, rgba(0,0,0,0.1)); 
+      border: 1px solid var(--control-bg-shaded); 
+      border-top: none;
+
+      &.scheduled {
+        background: @pickem-success-color;
+        color: white;
+      }
+      &.closed {
+        background: @pickem-danger-color;
+        color: white;
+      }
+      &.finished {
+        background: @pickem-finished-color;
+        color: white;
+      }
+    }
+
+    // TEAMS - Grid (Logo büyütüldü)
+    .EventCard-teams {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      justify-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .team-container {
+      display: flex;
+      align-items: center;
+      gap: 12px; 
+      min-width: 0;
+      max-width: 100%;
+      
+      &:first-child {
+        justify-self: right;
+      }
+      
+      &:last-child {
+        justify-self: left;
+        flex-direction: row-reverse;
+      }
+    }
+
+    .team-logo {
+      width: 98px; 
+      height: 98px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px; 
+      font-weight: 600;
+      color: white;
+      background: #5e5e5e; 
+      flex-shrink: 0;
+      border: 2px solid var(--body-bg-light); 
+      box-shadow: 0 1px 3px var(--shadow-color, rgba(0,0,0,0.1)); 
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+      }
+    }
+
+    .team-name {
+      font-size: 1.15rem; 
+      font-weight: 700; 
+      color: var(--heading-color);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
+    }
+
+    .vs {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--muted-color);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      flex-shrink: 0;
+      background: var(--body-bg-shaded); 
+      border: 1px solid var(--control-bg-shaded); 
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    // SCORE - Finished için
+    .EventCard-score {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 16px 0; 
+      padding: 12px;
+      background: fade(@primary-color, 8%); 
+      border-radius: var(--border-radius); 
+
+      .score-number {
+        font-size: 28px;
+        font-weight: 800;
+        color: @primary-color; 
+      }
+
+      .score-separator {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--body-color);
+        opacity: 0.3;
+      }
+    }
+
+    // INFO - Grid layout
+    .EventCard-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); 
+      gap: 10px;
+      padding: 12px;
+      background: var(--body-bg);
+      border-radius: var(--border-radius); 
+      margin: 12px 0;
+      font-size: 12px;
+      justify-items: center;
+
+      > div {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--body-color);
+
+        i {
+          color: @primary-color; 
+          font-size: 11px;
+          width: 14px;
+          text-align: center;
+        }
+
+        strong {
+          font-weight: 600;
+          color: var(--heading-color);
+          margin-right: 4px;
+        }
+      }
+    }
+
+    // COUNTDOWN (İmza renkleri kalıyor)
+    .EventCard-countdown {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      background: @pickem-warning-color; // İmza rengi
+      color: white;
+      border-radius: 3px;
+      font-weight: 700;
+      font-size: 11px;
+
+      i {
+        color: white !important;
+      }
+
+      &.urgent {
+        background: @pickem-danger-color; // İmza rengi
+        animation: pulse 1.5s ease-in-out infinite;
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.8; }
+    }
+
+    // "SAĞLAM" SEÇİM DÜĞMELERİ
+    .EventCard-picks {
+      display: flex;
+      gap: 8px;
+      padding-top: 12px;
+
+      .Button {
+        flex: 1;
+        padding: 12px 10px; 
+        font-weight: 700; 
+        font-size: 13px;
+        border-radius: var(--border-radius); 
+        
+        border: 1px solid var(--control-bg-shaded); 
+        background: var(--body-bg-light); 
+        color: var(--muted-color); 
+        transition: all 0.2s ease-in-out;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.02); 
+        
+        &:not(.Button--pickem-selected):hover:not(:disabled) {
+          border-color: @primary-color; 
+          color: @primary-color; 
+          background: fade(@primary-color, 10%); 
+          transform: translateY(-1px);
+          box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+        }
+        
+        &.Button--pickem-selected {
+          background-color: var(--button-primary-bg); 
+          border-color: var(--button-primary-bg);
+          color: var(--button-primary-color); 
+          box-shadow: 0 4px 10px fade(@primary-color, 30%); 
+          transform: translateY(-1px); 
+        }
+
+        &:disabled {
+          opacity: 0.4;
+          cursor: not-allowed;
+          transform: none;
+          box-shadow: none;
+        }
+      }
+    }
+
+    // PICK RESULT (İmza renkleri kalıyor)
+    .EventCard-pick-result {
+      padding: 10px 12px;
+      text-align: center;
+      font-size: 13px;
+      background: var(--body-bg);
+      border-radius: var(--border-radius); 
+      margin-top: 12px;
+      color: var(--body-color);
+
+      strong {
+        font-weight: 700;
+        color: var(--heading-color);
+      }
+
+      .correct {
+        color: @pickem-success-color; // İmza rengi
+        font-weight: 700;
+      }
+
+      .incorrect {
+        color: @pickem-danger-color; // İmza rengi
+        font-weight: 700;
+      }
+    }
+  }
+
+  // ============================================
+  // LOAD MORE
+  // ============================================
+
+  .LoadMore {
+    text-align: center;
+    margin: 20px 0;
+
+    .Button {
+      padding: 10px 24px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+  }
+
+  // ============================================
+  // MY PICKS TABLE (Modernize Edildi)
+  // --- SİLİNDİ --- (Yeni .PickemList--my-picks bunun yerini aldı)
+  // ============================================
+
+
+  // ============================================
+  // LEADERBOARD (Modernize Edildi)
+  // ============================================
+
+  .Podium {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px; 
+    margin-bottom: 25px;
+
+    .Podium-card {
+      background: var(--control-bg); 
+      border: 1px solid var(--control-bg-shaded); 
+      border-radius: var(--border-radius); 
+      padding: 20px;
+      text-align: center;
+      transition: all 0.2s;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04); 
+      border-top-width: 3px; 
+      
+      &.first {
+        border-top-color: #FFD700;
+        .medal { font-size: 42px; }
+        .rank { color: #B8860B; }
+      }
+      &.second {
+        border-top-color: #C0C0C0;
+        .medal { font-size: 36px; }
+        .rank { color: #C0C0C0; }
+      }
+      &.third {
+        border-top-color: #CD7F32;
+        .medal { font-size: 32px; }
+        .rank { color: #CD7F32; }
+      }
+
+      .medal {
+        margin-bottom: 10px;
+      }
+
+      .rank {
+        font-size: 10px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .username {
+        font-size: 15px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: var(--heading-color);
+      }
+
+      .points {
+        font-size: 24px;
+        font-weight: 800;
+        margin-bottom: 10px;
+        color: @primary-color; 
+        
+        small {
+          font-size: 11px;
+          font-weight: 600;
+          opacity: 0.6;
+        }
+      }
+
+      .stats {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        font-size: 11px;
+        padding-top: 10px;
+        border-top: 1px solid var(--control-bg-shaded); 
+        .stat {
+          .label {
+            font-size: 9px;
+            text-transform: uppercase;
+            color: var(--body-color);
+            opacity: 0.5;
+            margin-bottom: 3px;
+          }
+
+          .value {
+            font-weight: 700;
+            font-size: 13px;
+            color: var(--heading-color);
+          }
+        }
+      }
+    }
+  }
+
+  // ============================================
+  // YENİ RESPONSIVE LIST STRUCTURE (Leaderboard & MyPicks)
+  // ============================================
+
+  .PickemList {
+    background: var(--control-bg);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--control-bg-shaded);
+    overflow: hidden;
+    margin-top: 20px; 
+
+    // HEADER (Masaüstü Başlıkları)
+    &-header {
+      display: flex;
+      background: var(--body-bg-light);
+      border-bottom: 2px solid var(--control-bg-shaded);
+      padding: 12px 16px;
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--heading-color);
+      opacity: 0.6;
+
+      // Mobilde başlıkları tamamen gizle
+      @media (max-width: 767.98px) {
+        display: none;
+      }
+    }
+
+    // BODY (Satırların kapsayıcısı)
+    &-body {
+      // Mobilde kartlar arasında boşluk olması için
+      @media (max-width: 767.98px) {
+        display: grid;
+        gap: 10px;
+        padding: 10px;
+        background: var(--body-bg-shaded); // Kartlar arası arka plan
+      }
+    }
+
+    // ITEM (Satır / Mobil Kart)
+    &-item {
+      display: flex;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--control-bg-shaded);
+      align-items: center;
+      transition: background 0.2s;
+      position: relative; // Rank'ı konumlandırmak için
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &:hover {
+        background: var(--body-bg-light);
+      }
+
+      // İlk 3 renklendirmesi
+      &.top-1 { border-left: 3px solid #FFD700; }
+      &.top-2 { border-left: 3px solid #C0C0C0; }
+      &.top-3 { border-left: 3px solid #CD7F32; }
+
+      // MOBİL GÖRÜNÜMÜ (KART)
+      @media (max-width: 767.98px) {
+        flex-direction: column; // Alt alta sırala
+        align-items: stretch; // Genişliği doldur
+        padding: 0; // İç padding'i hücreler halledecek
+        gap: 0;
+        background: var(--control-bg);
+        border: 1px solid var(--control-bg-shaded);
+        border-radius: var(--border-radius);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        border-left: none; // Mobil için kenar çizgisini kaldır
+      }
+    }
+
+    // CELL (Hücre)
+    &-cell {
+      flex: 1;
+      font-size: 14px;
+      color: var(--body-color);
+      word-break: break-word; // Uzun yazılar için
+
+      // Özel Sütun Genişlikleri (Masaüstü - Leaderboard)
+      &.type-rank { 
+        flex: 0 0 60px; 
+        font-weight: 700; 
+        color: @primary-color; 
+      }
+      &.type-player { 
+        flex: 2; 
+        font-weight: 600; 
+        color: var(--heading-color); 
+      }
+      &.type-stat { 
+        flex: 1;
+        text-align: center; 
+      }
+
+      // Label (Etiket)
+      .mobile-label {
+        display: none; // Masaüstünde gizli
+      }
+
+      // MOBİL HÜCRE GÖRÜNÜMÜ
+      @media (max-width: 767.98px) {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: right !important;
+        width: 100%;
+        padding: 8px 12px;
+        border-bottom: 1px solid var(--body-bg-light);
+
+        &:last-child {
+          border-bottom: none;
+        }
+        
+        // Mobilde etiketleri göster
+        .mobile-label {
+          display: inline-block;
+          font-weight: 600;
+          font-size: 12px;
+          color: var(--muted-color);
+        }
+        
+        // Değer
+        .value {
+          font-weight: 500;
+        }
+        
+        // Oyuncu adını kart başlığı gibi yap (Leaderboard)
+        &.type-player {
+          font-size: 16px;
+          padding: 12px;
+          padding-top: 16px; // Rank için yer aç
+          border-bottom: 2px solid var(--control-bg-shaded);
+          justify-content: center; // Ortala
+        }
+
+        // Rank'ı başlığın yanına al (Leaderboard)
+        &.type-rank {
+          border-bottom: none;
+          padding: 0;
+          position: absolute;
+          top: 10px;
+          left: 12px;
+          font-size: 11px;
+          opacity: 0.7;
+          
+          .mobile-label { display: none; } // Rank için etikete gerek yok
+          .value { font-weight: 700; }
+        }
+      }
+    }
+  }
+
+  // MyPicksList için Özelleştirme
+  .PickemList--my-picks {
+    background: transparent; // Ana .PickemList arka planını iptal et
+    border: none;
+    
+    .PickemList-item {
+      // Renkli kenarlıklar
+      &.correct { border-left: 3px solid @pickem-success-color; }
+      &.incorrect { border-left: 3px solid @pickem-danger-color; }
+      &.pending { border-left: 3px solid @pickem-warning-color; }
+
+      // Mobilde kenarlığı koru
+      @media (max-width: 767.98px) {
+        &.correct { border-left: 4px solid @pickem-success-color; }
+        &.incorrect { border-left: 4px solid @pickem-danger-color; }
+        &.pending { border-left: 4px solid @pickem-warning-color; }
+      }
+    }
+    
+    .PickemList-cell {
+      // Masaüstü için özel genişlikler
+      &.type-match { flex: 2.5; font-weight: 600; color: var(--heading-color); }
+      &.type-date { flex: 1; text-align: center; }
+      &.type-pick { flex: 1.5; text-align: center; font-weight: 600; }
+      &.type-result { flex: 1.5; text-align: center; }
+      &.type-status { flex: 1; text-align: right; }
+    }
+
+    @media (max-width: 767.98px) {
+      .PickemList-item {
+        padding-top: 0; // Başlık üste yapışsın
+      }
+
+      .PickemList-cell {
+        // Kart başlığı
+        &.type-match {
+          font-size: 15px;
+          padding: 12px;
+          border-bottom: 2px solid var(--control-bg-shaded);
+          justify-content: center; // Ortala
+          .mobile-label { display: none; }
+        }
+
+        // Kart içeriği
+        &.type-date, &.type-pick, &.type-result {
+          padding: 8px 12px;
+          .value { font-weight: 500; }
+        }
+        
+        // Kart footeri
+        &.type-status {
+          padding: 10px 12px;
+          background: var(--body-bg-light);
+          border-bottom: none;
+          margin-top: 8px;
+          border-radius: 0 0 var(--border-radius) var(--border-radius);
+          .mobile-label { display: none; }
+          .value { flex: 1; text-align: center; }
+        }
+
+        // MyPicks için Rank'ı gizle
+        &.type-rank {
+          display: none;
+        }
+      }
+    }
+  }
+  
+  // Tahmin Durum Renkleri (MyPicksTab için)
+  .PickStatus {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 700;
+    font-size: 13px;
+
+    i { font-size: 12px; }
+
+    &--pending { color: @pickem-warning-color; }
+    &--correct { color: @pickem-success-color; }
+    &--incorrect { color: @pickem-danger-color; }
+  }
+
+
+  // Eski LeaderboardTable stillerini mobilde gizle (Artık .PickemList içinde)
+  @media (max-width: 767.98px) {
+    .LeaderboardTable {
+      display: none;
+    }
+  }
+  
+  // ============================================
+  // SAYFALAMA (Pagination) HİZALAMA DÜZELTMESİ
+  // ============================================
+  .Pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    
+    .Pagination-info {
+      margin: 0 10px;
+      font-size: 13px;
+      color: var(--muted-color);
+    }
+    
+    .Button {
+      flex-shrink: 0;
+    }
+  }
+
+
+  // ============================================
+  // EMPTY STATES
+  // ============================================
+
+  .MatchesPage-empty,
+  .MyPicksPage-empty,
+  .LeaderboardPage-empty {
+    text-align: center;
+    padding: 50px 20px;
+    color: var(--body-color);
+    opacity: 0.5;
+
+    i {
+      font-size: 40px;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    p {
+      font-size: 14px;
+    }
+  }
+  
+
+  // ============================================
+  // RESPONSIVE
+  // ============================================
+
+  @media @tablet-down { 
+    
+    .PickemPage-filters {
+      padding: 12px;
+    }
+
+    .PickemPage-tabs {
+      .Button {
+        flex-shrink: 0;
+        padding: 10px 14px;
+        font-size: 13px;
+      }
+    }
+
+    .EventCard {
+      padding: 14px;
+
+      .EventCard-teams {
+        padding-right: 0; 
+      }
+
+      .team-logo {
+        width: 48px; 
+        height: 48px; 
+        font-size: 20px; 
+      }
+
+      .team-name {
+        font-size: 14px; 
+      }
+
+      .vs {
+        font-size: 10px;
+        width: 28px; 
+        height: 28px;
+      }
+
+      .EventCard-status {
+        top: -1px;
+        right: 10px;
+        font-size: 9px;
+        padding: 3px 6px;
+      }
+
+      .EventCard-info {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        font-size: 11px;
+      }
+
+      .EventCard-picks {
+        flex-direction: column;
+        gap: 6px;
+
+        .Button {
+          width: 100%;
+        }
+      }
+
+      .EventCard-score {
+        .score-number {
+          font-size: 22px;
+        }
+        
+        .score-separator {
+          font-size: 16px;
+        }
+      }
+    }
+
+    .Podium {
+      grid-template-columns: 1fr;
+
+      .Podium-card {
+        &.first .medal,
+        &.second .medal,
+        &.third .medal {
+          font-size: 36px;
+        }
+      }
+    }
+
+    // Eski Tablo Stilleri (Hala MyPicks'te kullanılıyor)
+    .Table {
+      font-size: 12px;
+
+      thead th,
+      tbody td {
+        padding: 10px 12px;
+      }
+    }
+  }
+
+  @media @phone-down { 
+    .EventCard {
+      .EventCard-teams {
+        gap: 8px;
+      }
+
+      .team-name {
+        font-size: 13px; 
+      }
+    }
+
+    // Eski Tablo Stilleri (Hala MyPicks'te kullanılıyor)
+    .Table {
+      font-size: 11px;
+
+      thead th,
+      tbody td {
+        padding: 8px 10px;
+      }
+    }
+  }
+}
+
+// ============================================
+// USER HIGHLIGHT & FINAL TOUCHES
+// ============================================
+
+.PickemList-item {
+  &.is-me {
+    background: fade(@primary-color, 8%) !important; // Hafif primary renk arka planı
+    border-left: 3px solid @primary-color !important;
+    
+    .value {
+      font-weight: 700;
+      color: @primary-color;
+    }
+  }
+}
+
+.Podium-card {
+  &.is-me {
+    background: fade(@primary-color, 8%);
+    border-color: @primary-color;
+    transform: translateY(-5px); // Hafifçe yukarı çıkar
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    
+    .username {
+      color: @primary-color;
+    }
+  }
+}
+
+// Mobilde "Benim" kartım daha belirgin olsun
+@media (max-width: 767.98px) {
+  .PickemList-item.is-me {
+    border: 2px solid fade(@primary-color, 30%) !important;
+    box-shadow: 0 4px 12px fade(@primary-color, 15%);
+  }
+}
+
+// ============================================
+// MY RANK CARD (STICKY)
+// ============================================
+
+.MyRankCard {
+  background: var(--body-bg);
+  border: 2px solid @primary-color;
+  border-radius: var(--border-radius);
+  padding: 16px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  
+  &-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    @media (max-width: 767.98px) {
+      flex-direction: column;
+      gap: 16px;
+    }
+  }
+  
+  &-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    
+    .Avatar {
+      width: 48px;
+      height: 48px;
+    }
+    
+    .info {
+      display: flex;
+      flex-direction: column;
+      
+      .label {
+        font-size: 11px;
+        text-transform: uppercase;
+        font-weight: 700;
+        color: var(--muted-color);
+      }
+      
+      .rank {
+        font-size: 24px;
+        font-weight: 800;
+        color: @primary-color;
+      }
+    }
+  }
+  
+  &-stats {
+    display: flex;
+    gap: 24px;
+    
+    @media (max-width: 767.98px) {
+      width: 100%;
+      justify-content: space-around;
+      background: var(--body-bg-shaded);
+      padding: 12px;
+      border-radius: var(--border-radius);
+    }
+    
+    .stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      
+      .label {
+        font-size: 10px;
+        text-transform: uppercase;
+        font-weight: 700;
+        color: var(--muted-color);
+        margin-bottom: 4px;
+      }
+      
+      .value {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--heading-color);
+      }
+    }
+  }
+}
